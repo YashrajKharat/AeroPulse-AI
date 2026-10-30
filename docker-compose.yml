@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  aeropulse-app:
+    build: .
+    container_name: aeropulse-ai-service
+    ports:
+      - "8050:8050"
+    environment:
+      - AEROPULSE_PORT=8050
+      - AEROPULSE_DB=warehouse/flight_warehouse.duckdb
+    volumes:
+      - ./warehouse:/app/warehouse
+      - ./models:/app/models
+      - ./data_reports:/app/data_reports
+    restart: unless-stopped

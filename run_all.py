@@ -23,6 +23,16 @@ def main():
     print("      Data Warehousing, Multidimensional OLAP, Mining & ML Platform")
     print("=" * 80)
 
+    raw_data_dir = os.getenv("BTS_DATA_DIR", "v:/Flight_Delay_Data")
+    has_raw_data = os.path.exists(raw_data_dir) and any(f.endswith(".csv") for f in os.listdir(raw_data_dir) if os.path.isfile(os.path.join(raw_data_dir, f))) if os.path.exists(raw_data_dir) else False
+
+    # If user ran without args (--phase all) but raw data drive isn't mounted, default directly to Phase 8 dashboard
+    if args.phase == "all" and not has_raw_data:
+        print("\n[*] Notice: Raw BTS CSV source directory ('v:/Flight_Delay_Data') was not detected.")
+        print("[+] Existing Kimball Star Schema Data Warehouse & trained ML models found.")
+        print("[+] Launching Phase 8 Interactive Web Dashboard directly...\n")
+        args.phase = "8"
+
     # Phase 1
     if args.phase in ["1", "all"]:
         from src.phase1_validation.validate_clean import run_phase1_validation

@@ -25,6 +25,16 @@ dist/
 Thumbs.db
 desktop.ini
 
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Testing & Logs
+.pytest_cache/
+*.log
+
 # IDE & Editor settings
 .vscode/
 .idea/
