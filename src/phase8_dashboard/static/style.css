@@ -8,26 +8,33 @@
    ============================================================================== */
 
 :root {
-  /* Strict 3-Color Master Palette */
+  /* Strict Master Palette */
   --ice-silver: #DDE3E8;
   --deep-aubergine: #3A0F34;
   --marigold: #EAAA00;
 
-  /* Derived Neumorphic Shadows & Highlights for Ice Silver Canvas */
-  --neu-bg: #DDE3E8;
-  --neu-light: #feffff;
-  --neu-dark: #bcc2c7;
-  --neu-dark-deep: #a8b0b6;
+  /* Project Aviation Light Sky Theme: Stratosphere Cyan / Flight Level Ice */
+  --aero-sky-light: #C4DCF0;
+  --aero-sky-surface: rgba(198, 220, 238, 0.88);
+  --aero-sky-inner: rgba(180, 205, 226, 0.84);
+  --aero-sky-border: rgba(135, 172, 204, 0.65);
+  --aero-sky-border-subtle: rgba(58, 15, 52, 0.14);
+
+  /* Derived Tactile Shadows & Highlights for Aero Sky Canvas (Definitely Not White) */
+  --neu-bg: #bed7ec;
+  --neu-light: #e4f0fa;
+  --neu-dark: #97b8d2;
+  --neu-dark-deep: #84a6c2;
   
   /* Primary Tokens */
   --text-main: #3A0F34;
-  --text-muted: rgba(58, 15, 52, 0.72);
-  --text-dim: rgba(58, 15, 52, 0.50);
+  --text-muted: rgba(58, 15, 52, 0.78);
+  --text-dim: rgba(58, 15, 52, 0.55);
   --text-inverse: #DDE3E8;
   --text-marigold: #B88600;
 
-  --border-light: rgba(255, 255, 255, 0.75);
-  --border-subtle: rgba(58, 15, 52, 0.10);
+  --border-light: rgba(145, 180, 212, 0.65);
+  --border-subtle: rgba(58, 15, 52, 0.14);
 
   /* Shadows */
   --neu-raised: 8px 8px 18px var(--neu-dark), -8px -8px 18px var(--neu-light);
@@ -54,7 +61,14 @@
 }
 
 body {
-  background-color: var(--neu-bg);
+  background-color: #240a20;
+  background-image: 
+    radial-gradient(circle at 75% 20%, rgba(234, 170, 0, 0.22) 0%, transparent 45%),
+    linear-gradient(145deg, rgba(195, 218, 238, 0.65) 0%, rgba(175, 202, 224, 0.55) 45%, rgba(58, 15, 52, 0.70) 100%),
+    url('assets/aeropulse_bg.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center 25%;
   color: var(--text-main);
   font-family: var(--font-body);
   font-size: 14px;
@@ -63,61 +77,284 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  position: relative;
+}
+
+body.dark-theme {
+  background-color: #120310;
+  background-image: 
+    radial-gradient(circle at 75% 20%, rgba(234, 170, 0, 0.25) 0%, transparent 45%),
+    linear-gradient(145deg, rgba(22, 5, 20, 0.82) 0%, rgba(58, 15, 52, 0.70) 50%, rgba(12, 2, 11, 0.92) 100%),
+    url('assets/aeropulse_bg.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center 25%;
 }
 
 /* ==============================================================================
-   Neumorphic Base Surfaces
+   Sky HUD & Supersonic Jet Animations (Unrealistic / Futuristic Sci-Fi Effects)
+   ============================================================================== */
+.sky-hud-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.supersonic-jet-streak {
+  position: absolute;
+  top: 65px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  animation: supersonic-flight 14s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  opacity: 0;
+}
+
+.supersonic-jet-svg {
+  width: 32px;
+  height: 32px;
+  color: var(--marigold);
+  filter: drop-shadow(0 0 12px rgba(234, 170, 0, 0.95)) drop-shadow(0 0 25px rgba(234, 170, 0, 0.6));
+  transform: rotate(90deg);
+}
+
+.jet-contrail {
+  width: 160px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent 0%, rgba(234, 170, 0, 0.2) 20%, rgba(234, 170, 0, 0.85) 75%, #ffffff 100%);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 14px rgba(234, 170, 0, 0.95), 0 0 4px #ffffff;
+  margin-left: -8px;
+  position: relative;
+}
+
+/* Expanding Sonic Boom Shockwaves */
+.jet-contrail::before {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(234, 170, 0, 0.85);
+  animation: sonic-boom-pulse 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+@keyframes sonic-boom-pulse {
+  0% { transform: translateY(-50%) scale(0.4); opacity: 1; }
+  100% { transform: translateY(-50%) scale(2.8); opacity: 0; }
+}
+
+@keyframes supersonic-flight {
+  0% { transform: translateX(-180px) translateY(0); opacity: 0; }
+  5% { opacity: 0.95; }
+  85% { opacity: 0.95; }
+  100% { transform: translateX(calc(100vw + 200px)) translateY(-35px); opacity: 0; }
+}
+
+.telemetry-tag {
+  position: absolute;
+  font-family: var(--font-heading);
+  font-size: 0.70rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: rgba(234, 170, 0, 0.65);
+  text-shadow: 0 0 8px rgba(234, 170, 0, 0.4);
+  pointer-events: none;
+  animation: telemetry-flicker 5s ease-in-out infinite;
+}
+
+@keyframes telemetry-flicker {
+  0%, 100% { opacity: 0.75; }
+  45% { opacity: 0.85; }
+  47% { opacity: 0.35; }
+  49% { opacity: 0.9; }
+  88% { opacity: 0.8; }
+  89% { opacity: 0.4; }
+  90% { opacity: 0.85; }
+}
+
+.tag-top-right {
+  top: 15px;
+  right: 25px;
+}
+
+.tag-top-left {
+  top: 15px;
+  left: 25px;
+}
+
+/* ==============================================================================
+   Mini Holographic Radar HUD Scope
+   ============================================================================== */
+.mini-radar-hud {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.4rem;
+}
+
+.radar-scope {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(58, 15, 52, 0.85) 0%, rgba(30, 8, 27, 0.95) 100%);
+  border: 1.5px solid var(--marigold);
+  box-shadow: 0 0 10px rgba(234, 170, 0, 0.4), inset 0 0 6px rgba(234, 170, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.radar-crosshair-h {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(234, 170, 0, 0.25);
+}
+
+.radar-crosshair-v {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: rgba(234, 170, 0, 0.25);
+}
+
+.radar-sweep-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg, rgba(234, 170, 0, 0.65) 0deg, rgba(234, 170, 0, 0.1) 45deg, transparent 90deg);
+  border-radius: 50%;
+  animation: radar-sweep 2.8s linear infinite;
+}
+
+@keyframes radar-sweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.radar-blip {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 6px #ffffff, 0 0 10px var(--marigold);
+  animation: radar-blip-pulse 2.8s ease-in-out infinite;
+}
+
+.blip-1 {
+  top: 28%;
+  left: 65%;
+  animation-delay: 0.7s;
+}
+
+.blip-2 {
+  bottom: 25%;
+  left: 32%;
+  animation-delay: 1.9s;
+}
+
+@keyframes radar-blip-pulse {
+  0%, 100% { transform: scale(0.6); opacity: 0.15; }
+  35% { transform: scale(1.6); opacity: 1; }
+  60% { transform: scale(1.1); opacity: 0.5; }
+}
+
+/* ==============================================================================
+   Glass-Neumorphic Base Surfaces (High-Contrast & Tactile Depth)
    ============================================================================== */
 .glass-card,
-.neu-card {
-  background: var(--neu-bg);
+.neu-card,
+.panel {
+  background: var(--aero-sky-surface);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
   border-radius: var(--radius-lg);
-  box-shadow: var(--neu-raised);
-  border: 1px solid var(--border-light);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 12px 30px rgba(45, 12, 40, 0.16), inset 0 1px 2px rgba(228, 240, 250, 0.8);
+  border: 1px solid var(--aero-sky-border);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.neu-card:hover {
+  transform: translateY(-4px) scale(1.002);
+  border-color: rgba(234, 170, 0, 0.55);
+  box-shadow: 0 16px 36px rgba(45, 12, 40, 0.22), 0 0 16px rgba(234, 170, 0, 0.22);
+}
+
+body.dark-theme .glass-card,
+body.dark-theme .neu-card,
+body.dark-theme .panel {
+  background: rgba(36, 9, 32, 0.82);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(234, 170, 0, 0.2);
+  border: 1px solid rgba(234, 170, 0, 0.25);
+}
+
+body.dark-theme .neu-card:hover {
+  border-color: rgba(234, 170, 0, 0.65);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 22px rgba(234, 170, 0, 0.35);
 }
 
 .neu-card-sm {
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
+  backdrop-filter: blur(12px);
   border-radius: var(--radius-md);
   box-shadow: var(--neu-raised-sm);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--aero-sky-border);
+}
+
+body.dark-theme .neu-card-sm {
+  background: rgba(45, 12, 41, 0.88);
+  border: 1px solid rgba(234, 170, 0, 0.18);
 }
 
 .neu-inset-box {
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   border-radius: var(--radius-md);
   box-shadow: var(--neu-inset);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--aero-sky-border);
+}
+
+body.dark-theme .neu-inset-box {
+  background: rgba(28, 7, 25, 0.75);
+  border: 1px solid rgba(234, 170, 0, 0.15);
 }
 
 /* Deep Aubergine Accent Card */
 .panel.neu-dark-card,
 .neu-dark-card {
-  background: var(--deep-aubergine) !important;
+  background: linear-gradient(135deg, rgba(58, 15, 52, 0.96) 0%, rgba(35, 8, 31, 0.98) 100%) !important;
   color: var(--ice-silver) !important;
   border-radius: var(--radius-xl);
-  box-shadow: 10px 10px 24px var(--neu-dark), -10px -10px 24px var(--neu-light);
-  border: 1px solid rgba(234, 170, 0, 0.35);
+  box-shadow: 10px 10px 28px rgba(58, 15, 52, 0.35), -8px -8px 24px rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(234, 170, 0, 0.4);
 }
 
-.panel.neu-dark-card .res-stat-item {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(234, 170, 0, 0.2);
-  box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.35), inset -2px -2px 6px rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-md);
-}
-
-.panel.neu-dark-card .res-stat-item p {
-  color: var(--ice-silver) !important;
-  line-height: 1.5;
-}
-
-.panel.neu-dark-card .res-stat-label {
-  color: var(--marigold) !important;
-  font-weight: 700;
-  display: block;
-  margin-bottom: 0.3rem;
+/* Icons */
+.filter-icon,
+.label-icon {
+  margin-right: 0.35rem;
+  font-size: 1rem;
+  vertical-align: middle;
 }
 
 /* ==============================================================================
@@ -128,12 +365,20 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1.1rem 2.5rem;
-  background: var(--neu-bg);
-  box-shadow: 0 4px 16px var(--neu-dark), 0 -2px 10px var(--neu-light);
+  background: rgba(198, 220, 238, 0.88);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 4px 20px rgba(58, 15, 52, 0.14);
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--aero-sky-border);
+}
+
+body.dark-theme .navbar {
+  background: rgba(34, 9, 31, 0.90);
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(234, 170, 0, 0.22);
 }
 
 .nav-brand {
@@ -237,14 +482,22 @@ body {
   display: flex;
   gap: 0.85rem;
   padding: 0.9rem 2.5rem;
-  background: var(--neu-bg);
+  background: rgba(192, 216, 236, 0.86);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
   position: sticky;
   top: 73px;
   z-index: 95;
-  box-shadow: 0 4px 14px rgba(188, 194, 199, 0.45);
-  border-bottom: 1px solid var(--border-light);
+  box-shadow: 0 4px 18px rgba(58, 15, 52, 0.14);
+  border-bottom: 1px solid var(--aero-sky-border);
   overflow-x: auto;
   scrollbar-width: none;
+}
+
+body.dark-theme .tab-bar {
+  background: rgba(28, 7, 25, 0.82);
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(234, 170, 0, 0.2);
 }
 
 .tab-bar::-webkit-scrollbar {
@@ -256,10 +509,10 @@ body {
   align-items: center;
   gap: 0.6rem;
   padding: 0.7rem 1.35rem;
-  background: var(--neu-bg);
-  border: 1px solid var(--border-light);
+  background: var(--aero-sky-inner);
+  border: 1px solid var(--aero-sky-border);
   border-radius: var(--radius-pill);
-  color: var(--text-muted);
+  color: var(--text-main);
   font-family: var(--font-heading);
   font-size: 0.88rem;
   font-weight: 600;
@@ -271,13 +524,16 @@ body {
 
 .tab-btn:hover {
   color: var(--deep-aubergine);
+  background: rgba(190, 214, 234, 0.95);
   transform: translateY(-2px);
+  border-color: rgba(234, 170, 0, 0.5);
 }
 
 .tab-btn.active {
   color: var(--deep-aubergine);
+  background: rgba(168, 194, 218, 0.95);
   box-shadow: var(--neu-inset);
-  border-color: rgba(234, 170, 0, 0.5);
+  border-color: rgba(234, 170, 0, 0.65);
   font-weight: 700;
 }
 
@@ -358,9 +614,26 @@ body {
   flex-direction: column;
   justify-content: space-between;
   border-radius: var(--radius-lg);
-  background: var(--neu-bg);
-  box-shadow: var(--neu-raised);
-  border: 1px solid var(--border-light);
+  background: linear-gradient(135deg, rgba(204, 226, 244, 0.92) 0%, rgba(182, 210, 232, 0.88) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 28px rgba(58, 15, 52, 0.16), inset 0 1px 2px rgba(230, 242, 252, 0.8);
+  border: 1px solid var(--aero-sky-border);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(234, 170, 0, 0.6);
+  box-shadow: 0 16px 36px rgba(58, 15, 52, 0.24), 0 0 16px rgba(234, 170, 0, 0.25);
+}
+
+body.dark-theme .kpi-card {
+  background: rgba(36, 9, 32, 0.80);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(234, 170, 0, 0.2);
+  border: 1px solid rgba(234, 170, 0, 0.25);
 }
 
 .kpi-header {
@@ -387,7 +660,8 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: var(--neu-inset-sm);
-  background: var(--neu-bg);
+  background: rgba(175, 201, 222, 0.85);
+  border: 1px solid var(--aero-sky-border);
 }
 
 .kpi-icon svg {
@@ -530,13 +804,13 @@ body {
 .sql-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   color: var(--deep-aubergine);
   font-family: var(--font-body);
   font-size: 0.88rem;
-  font-weight: 500;
+  font-weight: 600;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--aero-sky-border);
   box-shadow: var(--neu-inset);
   outline: none;
   transition: all 0.2s ease;
@@ -545,12 +819,13 @@ body {
 .form-select:focus,
 .form-input:focus,
 .sql-input:focus {
-  border-color: rgba(234, 170, 0, 0.7);
-  box-shadow: var(--neu-inset-deep);
+  border-color: rgba(234, 170, 0, 0.8);
+  box-shadow: var(--neu-inset-deep), 0 0 8px rgba(234, 170, 0, 0.25);
+  background: rgba(195, 218, 238, 0.95);
 }
 
 .form-select option {
-  background: var(--ice-silver);
+  background: #bed7ec;
   color: var(--deep-aubergine);
   padding: 0.5rem;
 }
@@ -607,8 +882,8 @@ body {
   font-size: 0.92rem;
   font-weight: 700;
   cursor: pointer;
-  border: 1px solid var(--border-light);
-  background: var(--neu-bg);
+  border: 1px solid var(--aero-sky-border);
+  background: var(--aero-sky-inner);
   color: var(--deep-aubergine);
   box-shadow: var(--neu-raised-sm);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -616,6 +891,7 @@ body {
 
 .btn:hover {
   transform: translateY(-2px);
+  background: rgba(192, 216, 236, 0.95);
   box-shadow: 6px 6px 14px var(--neu-dark), -6px -6px 14px var(--neu-light);
 }
 
@@ -642,6 +918,47 @@ body {
   box-shadow: inset 3px 3px 6px #c48e00, inset -3px -3px 6px #ffd54f;
 }
 
+/* Unrealistic / Futuristic Supersonic Action Button */
+.btn-supersonic {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--marigold) 0%, #ffc525 50%, #d48b00 100%) !important;
+  color: #240a20 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 18px rgba(234, 170, 0, 0.45), var(--neu-raised-sm) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-supersonic:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 8px 28px rgba(234, 170, 0, 0.75), 0 0 18px rgba(234, 170, 0, 0.5) !important;
+  border-color: #ffffff !important;
+}
+
+.btn-supersonic:active {
+  transform: translateY(1px) scale(0.98) !important;
+}
+
+.btn-warp-sweep {
+  position: absolute;
+  top: -60%;
+  left: -80%;
+  width: 60%;
+  height: 220%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 50%, transparent 100%);
+  transform: rotate(28deg);
+  pointer-events: none;
+  animation: warp-sweep 3.2s infinite;
+}
+
+@keyframes warp-sweep {
+  0% { left: -80%; }
+  35% { left: 150%; }
+  100% { left: 150%; }
+}
+
 .btn-sm {
   padding: 0.45rem 0.9rem;
   font-size: 0.78rem;
@@ -657,7 +974,8 @@ body {
   border-radius: var(--radius-lg);
   box-shadow: var(--neu-inset);
   padding: 0.5rem;
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
+  border: 1px solid var(--aero-sky-border);
 }
 
 .data-table {
@@ -695,7 +1013,7 @@ body {
 }
 
 .data-table tr:hover td {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(160, 192, 220, 0.45);
 }
 
 /* ==============================================================================
@@ -728,8 +1046,8 @@ body {
 }
 
 .gauge-circle {
-  width: 170px;
-  height: 170px;
+  width: 175px;
+  height: 175px;
   border-radius: 50%;
   background: var(--neu-bg);
   box-shadow: var(--neu-inset);
@@ -737,6 +1055,38 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
+}
+
+/* Holographic Rotating Outer Avionics Ring */
+.gauge-circle::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(234, 170, 0, 0.45);
+  animation: sonar-ring-rotate 24s linear infinite;
+  pointer-events: none;
+}
+
+/* Expanding Radar Sonar Waves */
+.gauge-circle::after {
+  content: '';
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  border: 1px solid rgba(234, 170, 0, 0.35);
+  animation: sonar-wave-pulse 3s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes sonar-ring-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sonar-wave-pulse {
+  0% { transform: scale(0.88); opacity: 0.85; }
+  100% { transform: scale(1.22); opacity: 0; }
 }
 
 .gauge-inner {
@@ -833,10 +1183,11 @@ body {
 
 /* Cause Spotlight Box */
 .cause-spotlight-box {
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   border-radius: var(--radius-md);
   padding: 1.2rem;
   box-shadow: var(--neu-raised-sm);
+  border: 1px solid var(--aero-sky-border);
   border-left: 5px solid var(--marigold);
   margin-bottom: 1.4rem;
 }
@@ -932,10 +1283,11 @@ body {
 .risk-factors-list li {
   font-size: 0.82rem;
   color: var(--deep-aubergine);
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   padding: 0.65rem 0.95rem;
   border-radius: var(--radius-md);
   box-shadow: var(--neu-raised-sm);
+  border: 1px solid var(--aero-sky-border);
   border-left: 3px solid var(--deep-aubergine);
 }
 
@@ -995,10 +1347,11 @@ body {
 }
 
 .carrier-compare-item {
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   padding: 0.85rem;
   border-radius: var(--radius-md);
   box-shadow: var(--neu-raised-sm);
+  border: 1px solid var(--aero-sky-border);
   text-align: center;
   transition: transform 0.2s ease;
 }
@@ -1006,6 +1359,7 @@ body {
 .carrier-compare-item.active-choice {
   box-shadow: var(--neu-inset);
   border: 2px solid var(--marigold);
+  background: rgba(165, 195, 220, 0.95);
 }
 
 .carrier-compare-code {
@@ -1044,8 +1398,9 @@ body {
   justify-content: space-between;
   padding: 0.55rem 0.85rem;
   border-radius: var(--radius-sm);
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   box-shadow: var(--neu-inset-sm);
+  border: 1px solid var(--aero-sky-border);
   font-size: 0.8rem;
 }
 
@@ -1263,6 +1618,11 @@ body.dark-theme {
   --neu-light: #340f30;
   --neu-dark: #140413;
   --neu-dark-deep: #0a0109;
+
+  --aero-sky-surface: rgba(36, 9, 32, 0.84);
+  --aero-sky-inner: rgba(28, 7, 25, 0.84);
+  --aero-sky-border: rgba(234, 170, 0, 0.25);
+  --aero-sky-border-subtle: rgba(234, 170, 0, 0.12);
   
   --text-main: #DDE3E8;
   --text-muted: rgba(221, 227, 232, 0.75);
@@ -1285,8 +1645,8 @@ body.dark-theme .panel,
 body.dark-theme .res-stat-item,
 body.dark-theme .airport-hub-card,
 body.dark-theme .timeline-content {
-  background: #22091f;
-  border-color: rgba(255, 255, 255, 0.07);
+  background: rgba(36, 9, 32, 0.85);
+  border-color: rgba(234, 170, 0, 0.22);
 }
 
 body.dark-theme .panel.neu-dark-card,
@@ -1345,10 +1705,22 @@ body.dark-theme .data-table tr:hover {
   padding: 0.85rem 1.4rem;
   margin-bottom: 1.5rem;
   border-radius: var(--radius-lg);
-  background: var(--neu-bg);
-  box-shadow: var(--neu-raised-sm);
-  border: 1px solid var(--border-light);
+  background: linear-gradient(135deg, rgba(204, 226, 244, 0.94) 0%, rgba(184, 210, 232, 0.90) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 24px rgba(58, 15, 52, 0.14), inset 0 1px 2px rgba(230, 242, 252, 0.8);
+  border: 1px solid var(--aero-sky-border);
+  border-left: 4px solid var(--marigold);
   flex-wrap: wrap;
+  position: relative;
+  z-index: 5;
+}
+
+body.dark-theme .global-filter-bar {
+  background: rgba(36, 9, 32, 0.88);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(234, 170, 0, 0.2);
+  border: 1px solid rgba(234, 170, 0, 0.25);
+  border-left: 4px solid var(--marigold);
 }
 
 .filter-group {
@@ -1485,11 +1857,11 @@ body.dark-theme .leaflet-control-layers {
 .step-card {
   flex: 1;
   min-width: 170px;
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   border-radius: var(--radius-md);
   box-shadow: var(--neu-raised-sm);
   padding: 1rem;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--aero-sky-border);
   text-align: center;
 }
 
@@ -1501,12 +1873,12 @@ body.dark-theme .leaflet-control-layers {
 
 /* Feature 5: No-Code Visual Query Builder */
 .query-builder-box {
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   border-radius: var(--radius-md);
   box-shadow: var(--neu-inset-sm);
   padding: 1.2rem;
   margin-bottom: 1.25rem;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--aero-sky-border);
 }
 
 .qb-grid {
@@ -1559,24 +1931,55 @@ body.dark-theme .leaflet-control-layers {
    DYNAMIC DELAY RESOLUTION BLUEPRINT STYLES
    ============================================================================== */
 .solution-blueprint-card {
-  background: var(--neu-bg);
+  background: linear-gradient(135deg, rgba(204, 226, 244, 0.94) 0%, rgba(182, 210, 232, 0.90) 100%);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
   border-radius: var(--radius-lg);
-  box-shadow: var(--neu-raised);
-  padding: 1.4rem;
-  border: 1px solid var(--border-light);
+  box-shadow: 0 12px 36px rgba(58, 15, 52, 0.20), 0 0 20px rgba(234, 170, 0, 0.15);
+  padding: 1.6rem;
+  border: 1.5px solid var(--marigold);
   position: relative;
   overflow: hidden;
+  animation: cyber-blueprint-pulse 4s ease-in-out infinite;
 }
 
+@keyframes cyber-blueprint-pulse {
+  0%, 100% { border-color: rgba(234, 170, 0, 0.45); box-shadow: 0 12px 36px rgba(58, 15, 52, 0.20), 0 0 16px rgba(234, 170, 0, 0.18); }
+  50% { border-color: rgba(234, 170, 0, 0.95); box-shadow: 0 14px 44px rgba(58, 15, 52, 0.28), 0 0 32px rgba(234, 170, 0, 0.45); }
+}
+
+/* Continuous Supersonic Laser Scan Beam */
 .solution-blueprint-card::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--marigold);
+  left: -100%;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, var(--marigold) 40%, #ffffff 50%, var(--marigold) 60%, transparent 100%);
+  animation: cyber-scan-laser 3.6s linear infinite;
+  z-index: 2;
 }
+
+@keyframes cyber-scan-laser {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+
+/* HUD Corner Brackets for Blueprint Card */
+.hud-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--marigold);
+  border-style: solid;
+  pointer-events: none;
+  z-index: 3;
+}
+.hud-corner-tl { top: 6px; left: 6px; border-width: 2.5px 0 0 2.5px; }
+.hud-corner-tr { top: 6px; right: 6px; border-width: 2.5px 2.5px 0 0; }
+.hud-corner-bl { bottom: 6px; left: 6px; border-width: 0 0 2.5px 2.5px; }
+.hud-corner-br { bottom: 6px; right: 6px; border-width: 0 2.5px 2.5px 0; }
 
 .solution-header {
   display: flex;
@@ -1606,12 +2009,13 @@ body.dark-theme .leaflet-control-layers {
 }
 
 .solution-rationale-box {
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   border-radius: var(--radius-md);
   box-shadow: var(--neu-inset-sm);
   padding: 0.9rem 1.1rem;
   margin-bottom: 1.25rem;
-  border-left: 3px solid var(--marigold);
+  border: 1px solid var(--aero-sky-border);
+  border-left: 4px solid var(--marigold);
 }
 
 .rationale-label {
@@ -1637,10 +2041,10 @@ body.dark-theme .leaflet-control-layers {
 
 .action-card {
   padding: 1rem;
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   border-radius: var(--radius-md);
   box-shadow: var(--neu-raised-sm);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--aero-sky-border);
   display: flex;
   flex-direction: column;
 }
@@ -1661,9 +2065,9 @@ body.dark-theme .leaflet-control-layers {
   font-weight: 700;
   padding: 0.2rem 0.55rem;
   border-radius: var(--radius-pill);
-  background: var(--neu-bg);
+  background: rgba(165, 195, 220, 0.9);
   box-shadow: var(--neu-inset-sm);
-  color: var(--marigold);
+  color: var(--deep-aubergine);
 }
 
 .action-title {
@@ -1682,10 +2086,11 @@ body.dark-theme .leaflet-control-layers {
 }
 
 .solution-checklist-box {
-  background: var(--neu-bg);
+  background: var(--aero-sky-inner);
   border-radius: var(--radius-md);
   box-shadow: var(--neu-inset-sm);
   padding: 1rem 1.2rem;
+  border: 1px solid var(--aero-sky-border);
 }
 
 .checklist-title {
@@ -1711,8 +2116,9 @@ body.dark-theme .leaflet-control-layers {
   line-height: 1.4;
   padding: 0.5rem 0.75rem;
   border-radius: var(--radius-sm);
-  background: var(--neu-bg);
+  background: rgba(192, 216, 236, 0.9);
   box-shadow: var(--neu-raised-sm);
+  border: 1px solid var(--aero-sky-border);
 }
 
 body.dark-theme .checklist-item {
@@ -1738,4 +2144,232 @@ body.dark-theme .checklist-item {
     transform: rotate(90deg);
   }
 }
+
+/* =========================================================================
+   INSTITUTIONAL LOADING SCREEN (Exact Fidelity to SE MiniProject VIT Placement)
+   ========================================================================= */
+
+@keyframes fillUp {
+  0% {
+    transform: scaleY(0);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+}
+
+.animate-fill-up {
+  transform-origin: bottom;
+  animation: fillUp 2s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.root-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #f5f5f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.dark-theme .root-loader-overlay {
+  background: #0e0510;
+}
+
+.root-loader-overlay.loader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-inner-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem; /* Exactly gap-6 as in SE MiniProject */
+}
+
+/* Outline logo container that fills from bottom to top */
+.loader-logo-frame {
+  position: relative;
+  width: 5.25rem;  /* 84px */
+  height: 5.25rem; /* 84px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border-radius: 1.25rem; /* rounded-2xl */
+  overflow: hidden;
+}
+
+body.dark-theme .loader-logo-frame {
+  background: #18061a;
+  border-color: rgba(234, 170, 0, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Background scale-up fill animation with AeroPulse Signature Palette */
+.loader-fill-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #EAAA00 0%, #3A0F34 100%);
+}
+
+body.dark-theme .loader-fill-bg {
+  background: linear-gradient(180deg, #EAAA00 0%, #571C4F 100%);
+}
+
+/* Foreground AeroPulse Supersonic Jet Logo with mix-blend-difference */
+.loader-symbol-wrapper {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-project-svg {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #1e293b; /* slate-800 */
+  mix-blend-mode: difference;
+  transform: rotate(-45deg);
+  user-select: none;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* AeroPulse Brand Metadata Text Block */
+.loader-meta-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  text-align: center;
+}
+
+.loader-brand-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.loader-brand-name {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #3A0F34;
+}
+
+body.dark-theme .loader-brand-name {
+  color: #EAAA00;
+}
+
+.loader-brand-badge {
+  background: linear-gradient(135deg, #EAAA00 0%, #D49000 100%);
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  letter-spacing: 0.08em;
+  box-shadow: 0 2px 6px rgba(234, 170, 0, 0.4);
+}
+
+.loader-project-tagline {
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #64748b;
+}
+
+body.dark-theme .loader-project-tagline {
+  color: rgba(221, 227, 232, 0.6);
+}
+
+.loader-status-subtext {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #EAAA00;
+  min-height: 1.2em;
+  animation: pulseGlow 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  margin-top: 0.2rem;
+}
+
+body.dark-theme .loader-status-subtext {
+  color: #EAAA00;
+}
+
+/* Progress Bar Track & Fill */
+.loader-progress-track {
+  width: 150px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 0.35rem;
+}
+
+body.dark-theme .loader-progress-track {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.loader-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #3A0F34 0%, #EAAA00 100%);
+  border-radius: 9999px;
+  transition: width 0.35s ease;
+}
+
+body.dark-theme .loader-progress-bar {
+  background: linear-gradient(90deg, #EAAA00 0%, #FFD700 100%);
+}
+
+.loader-progress-pct {
+  font-size: 9px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+body.dark-theme .loader-progress-pct {
+  color: #94a3b8;
+}
+
+
 

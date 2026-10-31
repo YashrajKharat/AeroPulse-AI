@@ -21,6 +21,62 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- AeroPulse AI Dynamic Loading Screen (DZ!NR-style liquid fill architecture) -->
+  <div id="app-root-loader" class="root-loader-overlay">
+    <div class="loader-inner-container">
+      <!-- Outline logo container that fills from bottom to top -->
+      <div class="loader-logo-frame">
+        <!-- Background scale-up fill animation with AeroPulse Marigold/Aubergine gradient -->
+        <div class="loader-fill-bg animate-fill-up"></div>
+        
+        <!-- Foreground AeroPulse Project Supersonic Jet Logo with mix-blend-difference -->
+        <div class="loader-symbol-wrapper">
+          <svg class="loader-project-svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Project Metadata Text Block -->
+      <div class="loader-meta-container">
+        <div class="loader-brand-title">
+          <span class="loader-brand-name">AEROPULSE</span>
+          <span class="loader-brand-badge">AI</span>
+        </div>
+        <span class="loader-project-tagline">Flight Delay Analytics &amp; Prediction System</span>
+        <span class="loader-status-subtext" id="loader-status-subtext">Initializing Airspace Telemetry &amp; Star Schema DW...</span>
+        
+        <!-- Progress Indicator Track -->
+        <div class="loader-progress-track">
+          <div class="loader-progress-bar" id="loader-progress-bar"></div>
+        </div>
+        <span class="loader-progress-pct" id="loader-progress-pct">0%</span>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Inline failsafe watchdog: guarantees the loader dismisses under all circumstances
+    setTimeout(function() {
+      var l = document.getElementById("app-root-loader");
+      if (l && !l.classList.contains("loader-hidden")) {
+        l.classList.add("loader-hidden");
+        setTimeout(function() { try { l.remove(); } catch(e){} }, 500);
+      }
+    }, 2600);
+  </script>
+
+  <!-- Ambient High-Tech Aero Sky Effects & Supersonic Jet Animation -->
+  <div class="sky-hud-layer" aria-hidden="true">
+    <div class="supersonic-jet-streak">
+      <svg class="supersonic-jet-svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+      </svg>
+      <div class="jet-contrail"></div>
+    </div>
+    <div class="telemetry-tag tag-top-right">FLIGHT LEVEL 410 • SPEED 490 KTS</div>
+    <div class="telemetry-tag tag-top-left">AEROPULSE RADAR HUD • SECTOR NAS-US</div>
+  </div>
+
   <!-- Header / Navigation Bar -->
   <header class="navbar">
     <div class="nav-brand">
@@ -36,6 +92,16 @@
     </div>
 
     <div class="nav-status">
+      <!-- Mini Holographic Radar HUD Scanner -->
+      <div class="mini-radar-hud" title="Live Airspace Telemetry Radar">
+        <div class="radar-scope">
+          <div class="radar-crosshair-h"></div>
+          <div class="radar-crosshair-v"></div>
+          <div class="radar-sweep-beam"></div>
+          <div class="radar-blip blip-1"></div>
+          <div class="radar-blip blip-2"></div>
+        </div>
+      </div>
       <span class="live-indicator"><span class="pulse-dot"></span> 7,079,081 Flights Stored</span>
       <span class="badge-chip">DuckDB Star Schema</span>
       <span class="badge-chip badge-purple">ML Gradient Booster</span>
@@ -80,7 +146,7 @@
     <div class="global-filter-bar">
       <div class="filter-group">
         <div class="filter-item">
-          <span class="filter-label">Season:</span>
+          <span class="filter-label"><span class="filter-icon">🌤️</span> Season:</span>
           <select id="filter-season" class="form-select" style="width: 140px; padding: 0.35rem 0.6rem;">
             <option value="ALL" selected>All Seasons</option>
             <option value="SUMMER">Summer Peak</option>
@@ -90,7 +156,7 @@
           </select>
         </div>
         <div class="filter-item">
-          <span class="filter-label">Carrier:</span>
+          <span class="filter-label"><span class="filter-icon">✈️</span> Carrier:</span>
           <select id="filter-carrier" class="form-select" style="width: 175px; padding: 0.35rem 0.6rem;">
             <option value="ALL" selected>All 15 Airlines</option>
             <option value="AA">American Airlines (AA)</option>
@@ -103,7 +169,7 @@
           </select>
         </div>
         <div class="filter-item">
-          <span class="filter-label">Hub Region:</span>
+          <span class="filter-label"><span class="filter-icon">🧭</span> Hub Region:</span>
           <select id="filter-region" class="form-select" style="width: 145px; padding: 0.35rem 0.6rem;">
             <option value="ALL" selected>All US Hubs</option>
             <option value="NORTHEAST">Northeast (JFK/LGA/EWR)</option>
@@ -185,7 +251,7 @@
         <div class="panel neu-card">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Decomposition of Flight Delay Causes</h2>
+              <h2 class="panel-title">🍩 Decomposition of Flight Delay Causes</h2>
               <p class="panel-desc">Share of cumulative delay minutes across 103,799,657 national delay minutes</p>
             </div>
           </div>
@@ -197,7 +263,7 @@
         <div class="panel neu-card">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Monthly Delay Trends & Seasonality (2024)</h2>
+              <h2 class="panel-title">📈 Monthly Delay Trends & Seasonality (2024)</h2>
               <p class="panel-desc">Month-over-month arrival delay rate (%) and total flight volume</p>
             </div>
           </div>
@@ -238,7 +304,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Interactive US Flight Route & Airport Hub Topology Map</h2>
+            <h2 class="panel-title">🗺️ Interactive US Flight Route & Airport Hub Topology Map</h2>
             <p class="panel-desc">Geospatial network plotting major BTS hubs, taxi friction intensity, and high-volume delay corridors across the United States</p>
           </div>
           <span class="badge-chip badge-purple">Leaflet.js Geospatial Engine</span>
@@ -249,7 +315,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Airlines On-Time Performance & Mean Delay Comparison</h2>
+            <h2 class="panel-title">📊 Airlines On-Time Performance & Mean Delay Comparison</h2>
             <p class="panel-desc">Comparison of all 15 major US carriers by delay frequency and average arrival delay (minutes)</p>
           </div>
         </div>
@@ -263,7 +329,7 @@
         <div class="panel neu-card">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Intra-Day Delay Acceleration (00:00 - 23:00)</h2>
+              <h2 class="panel-title">⏱️ Intra-Day Delay Acceleration (00:00 - 23:00)</h2>
               <p class="panel-desc">Scheduled departure hour vs. on-time degradation</p>
             </div>
           </div>
@@ -276,7 +342,7 @@
         <div class="panel neu-card">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Weekly Delay Variation (Monday - Sunday)</h2>
+              <h2 class="panel-title">🗓️ Weekly Delay Variation (Monday - Sunday)</h2>
               <p class="panel-desc">Traffic volume and delay probability across days</p>
             </div>
           </div>
@@ -290,7 +356,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Airport Hub Head-to-Head Comparison Tool</h2>
+            <h2 class="panel-title">⚔️ Airport Hub Head-to-Head Comparison Tool</h2>
             <p class="panel-desc">Compare surface taxi friction, airspace delays, and on-time performance between any two major US hubs</p>
           </div>
           <div style="display:flex; gap: 0.8rem; align-items:center; flex-wrap: wrap;">
@@ -309,7 +375,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Top 20 Origin Airport Hubs Operational Profile</h2>
+            <h2 class="panel-title">🏢 Top 20 Origin Airport Hubs Operational Profile</h2>
             <p class="panel-desc">Total departures, delay rates, and departure delays across the busiest airports</p>
           </div>
         </div>
@@ -338,7 +404,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Kimball Star Schema Data Warehouse Architecture</h2>
+            <h2 class="panel-title">⭐ Kimball Star Schema Data Warehouse Architecture</h2>
             <p class="panel-desc">1 Fact Table + 5 Dimension Tables designed for sub-second OLAP slicing and dicing</p>
           </div>
           <span class="badge-chip badge-purple">Embedded DuckDB Columnar Warehouse</span>
@@ -376,7 +442,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Top 15 Route Delay Pareto Concentration Analysis</h2>
+            <h2 class="panel-title">📉 Top 15 Route Delay Pareto Concentration Analysis</h2>
             <p class="panel-desc">US flight routes generating the highest cumulative delay minutes</p>
           </div>
         </div>
@@ -401,7 +467,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Interactive Live SQL / OLAP Console & Visual Query Builder</h2>
+            <h2 class="panel-title">⚡ Interactive Live SQL / OLAP Console &amp; Visual Query Builder</h2>
             <p class="panel-desc">Execute real-time analytical SQL queries against the Star Schema Data Warehouse in DuckDB or build queries visually without SQL</p>
           </div>
           <div class="preset-queries" style="display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
@@ -509,7 +575,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Interactive Association Rule Network Graph</h2>
+            <h2 class="panel-title">🕸️ Interactive Association Rule Network Graph</h2>
             <p class="panel-desc">Visual topological graph of frequent itemset antecedents propagating into delayed flight consequents (thickness &amp; glow proportional to rule Lift)</p>
           </div>
           <span class="badge-chip badge-purple">Apriori Network Topology</span>
@@ -523,7 +589,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Phase 6: Discovered Association Rules (Apriori Pattern Mining)</h2>
+            <h2 class="panel-title">⛏️ Discovered Association Rules (Apriori Pattern Mining)</h2>
             <p class="panel-desc">Frequent patterns indicating high conditional probability of flight delays (Support, Confidence & Lift)</p>
           </div>
           <div class="filter-controls" style="display:flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
@@ -562,7 +628,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Airport Operational Space (Taxi Friction vs. Arrival Delay Rate)</h2>
+            <h2 class="panel-title">🎯 Airport Operational Space (Taxi Friction vs. Arrival Delay Rate)</h2>
             <p class="panel-desc">Multidimensional scatter plot grouping major airport hubs into 4 behavioral K-Means clusters</p>
           </div>
           <span class="badge-chip">Unsupervised K-Means (k=4)</span>
@@ -576,7 +642,7 @@
       <div class="panel neu-card">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Airport Operational Cluster Profiles & Characteristics</h2>
+            <h2 class="panel-title">🧭 Airport Operational Cluster Profiles &amp; Characteristics</h2>
             <p class="panel-desc">Cluster centroid profiles and hub assignment breakdowns across the National Airspace System</p>
           </div>
         </div>
@@ -603,7 +669,7 @@
           <div class="panel neu-card predictor-form-card">
             <div class="panel-header">
               <div>
-                <h2 class="panel-title">Flight Delay Prediction Simulator</h2>
+                <h2 class="panel-title">🎛️ Flight Delay Prediction Simulator</h2>
                 <p class="panel-desc">Input flight parameters to generate real-time ML inference</p>
               </div>
               <span class="badge-chip badge-purple">Gradient Boosting</span>
@@ -612,7 +678,7 @@
           <form id="prediction-form" class="pred-form">
             <div class="form-grid">
               <div class="form-group">
-                <label for="pred-carrier">Operating Airline</label>
+                <label for="pred-carrier"><span class="label-icon">✈️</span> Operating Airline</label>
                 <select id="pred-carrier" class="form-select" required>
                   <option value="AA" selected>American Airlines (AA)</option>
                   <option value="DL">Delta Air Lines (DL)</option>
@@ -633,7 +699,7 @@
               </div>
 
               <div class="form-group">
-                <label for="pred-origin">Origin Airport</label>
+                <label for="pred-origin"><span class="label-icon">🛫</span> Origin Airport</label>
                 <select id="pred-origin" class="form-select" required>
                   <option value="DFW" selected>DFW - Dallas/Fort Worth, TX</option>
                   <option value="ATL">ATL - Atlanta, GA</option>
@@ -657,7 +723,7 @@
               </div>
 
               <div class="form-group">
-                <label for="pred-dest">Destination Airport</label>
+                <label for="pred-dest"><span class="label-icon">🛬</span> Destination Airport</label>
                 <select id="pred-dest" class="form-select" required>
                   <option value="ORD" selected>ORD - Chicago O'Hare, IL</option>
                   <option value="DFW">DFW - Dallas/Fort Worth, TX</option>
@@ -679,7 +745,7 @@
               </div>
 
               <div class="form-group">
-                <label for="pred-month">Travel Month</label>
+                <label for="pred-month"><span class="label-icon">📅</span> Travel Month</label>
                 <select id="pred-month" class="form-select">
                   <option value="1">January (Winter)</option>
                   <option value="2">February (Winter)</option>
@@ -697,7 +763,7 @@
               </div>
 
               <div class="form-group">
-                <label for="pred-dow">Day of Week</label>
+                <label for="pred-dow"><span class="label-icon">🗓️</span> Day of Week</label>
                 <select id="pred-dow" class="form-select">
                   <option value="1">Monday</option>
                   <option value="2">Tuesday</option>
@@ -710,7 +776,7 @@
               </div>
 
               <div class="form-group">
-                <label for="pred-hour">Scheduled Departure Time</label>
+                <label for="pred-hour"><span class="label-icon">⏱️</span> Scheduled Departure Time</label>
                 <div class="slider-wrapper">
                   <input type="range" id="pred-hour" min="0" max="23" value="18" class="form-range">
                   <span id="pred-hour-label" class="slider-value">18:00 (6:00 PM)</span>
@@ -718,9 +784,10 @@
               </div>
             </div>
 
-            <button type="submit" id="btn-predict" class="btn btn-predict">
+            <button type="submit" id="btn-predict" class="btn btn-predict btn-supersonic">
+              <span class="btn-warp-sweep"></span>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
-              Predict Flight Delay Risk
+              <span class="btn-predict-text">Predict Flight Delay Risk</span>
             </button>
           </form>
         </div>
@@ -729,7 +796,7 @@
         <div class="panel neu-card predictor-result-card">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Model Inference & Risk Diagnostics</h2>
+              <h2 class="panel-title">🎯 Model Inference &amp; Risk Diagnostics</h2>
               <p class="panel-desc">Calculated via HistGradientBoosting ML pipeline</p>
             </div>
             <span id="res-risk-badge" class="badge-risk">Awaiting Input</span>
@@ -824,6 +891,10 @@
 
             <!-- GENUINE DYNAMIC DELAY RESOLUTION & MITIGATION BLUEPRINT -->
             <div id="dynamic-solution-card" class="solution-blueprint-card" style="display:none; margin-top: 1.5rem;">
+              <div class="hud-corner hud-corner-tl"></div>
+              <div class="hud-corner hud-corner-tr"></div>
+              <div class="hud-corner hud-corner-bl"></div>
+              <div class="hud-corner hud-corner-br"></div>
               <div class="solution-header">
                 <div class="solution-header-left">
                   <span class="solution-badge-tag">Dynamic Delay Resolution Plan</span>
@@ -888,7 +959,7 @@
         <div class="panel neu-card">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">24-Hour "Best Time to Fly" Risk Curve</h2>
+              <h2 class="panel-title">⏱️ 24-Hour "Best Time to Fly" Risk Curve</h2>
               <p class="panel-desc">Hourly delay probability across the day for this route & carrier</p>
             </div>
             <span id="best-hour-badge" class="hourly-best-badge" style="display:none;">Best: 06:00 AM</span>
@@ -901,7 +972,7 @@
         <div class="panel neu-card">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Alternative Carriers Comparison on this Route</h2>
+              <h2 class="panel-title">✈️ Alternative Carriers Comparison on this Route</h2>
               <p class="panel-desc">Estimated delay probability across competing airlines for this departure slot</p>
             </div>
           </div>
@@ -916,7 +987,7 @@
         <div class="panel neu-card">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Model Feature Importances (Permutation ROC-AUC)</h2>
+              <h2 class="panel-title">📊 Model Feature Importances (Permutation ROC-AUC)</h2>
               <p class="panel-desc">Relative influence of operational features on delay likelihood</p>
             </div>
           </div>
@@ -928,7 +999,7 @@
         <div class="panel neu-card">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Receiver Operating Characteristic (ROC Curve)</h2>
+              <h2 class="panel-title">📈 Receiver Operating Characteristic (ROC Curve)</h2>
               <p class="panel-desc">Holdout Out-of-Time test performance (ROC-AUC = 0.612)</p>
             </div>
           </div>
@@ -944,7 +1015,7 @@
         <div class="panel neu-card" style="margin-bottom:1.5rem;">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Multi-Leg Itinerary Compounding Delay &amp; Missed Connection Simulator</h2>
+              <h2 class="panel-title">🔁 Multi-Leg Itinerary Compounding Delay &amp; Missed Connection Simulator</h2>
               <p class="panel-desc">Simulate compounding delay propagation across a 2-leg itinerary and evaluate missed connection risk at connecting hubs</p>
             </div>
             <span class="badge-chip badge-purple">Two-Leg Compounding Engine</span>
@@ -1045,8 +1116,10 @@
               </div>
             </div>
 
-            <button type="submit" id="btn-predict-connecting" class="btn btn-predict" style="margin-top:1.2rem;">
-              Simulate 2-Leg Compounding Delay &amp; Connection Risk
+            <button type="submit" id="btn-predict-connecting" class="btn btn-predict btn-supersonic" style="margin-top:1.2rem;">
+              <span class="btn-warp-sweep"></span>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <span>Simulate 2-Leg Compounding Delay &amp; Connection Risk</span>
             </button>
           </form>
 

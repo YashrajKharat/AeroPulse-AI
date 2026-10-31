@@ -134,15 +134,25 @@ Engineered a fast, zero-redundancy Star Schema in DuckDB:
   4. `dest_prior`: Arrival runway / terminal capacity constraints.
   5. `origin_prior`: Surface taxi-out congestion.
 
-### Phase 8: Interactive Web Dashboard
-- Accessible at: **`http://localhost:8050`**
-- Features:
-  - Executive KPI cards with glowing animated pulse indicators.
-  - Dynamic interactive charts (Delay Causes Doughnut, Monthly Seasonality, Carrier Ranking, Hourly Ramp, Day-of-Week).
-  - Kimball Star Schema interactive architectural viewer.
-  - Interactive Route Pareto table and Association Rules explorer.
-  - **Live ML Delay Predictor Simulator**: Select any airline, origin, destination, month, and scheduled departure time to calculate real-time delay probability, risk category, expected delay minutes, and operational risk factors.
-  - **Interactive SQL OLAP Console**: Run custom queries directly against DuckDB with execution latency displayed in milliseconds.
+### Phase 8: Next-Gen Aeronautical Interactive Web Dashboard & Closed-Loop Engine
+- **Accessible at**: **`http://localhost:8050`**
+- **Dynamic Preloader Screen (DZ!NR-Style Liquid Fill Architecture)**:
+  - Features an animated liquid fillup card (`@keyframes fillUp` with `cubic-bezier(0.76, 0, 0.24, 1)`) with real-time contrast inversion (`mix-blend-mode: difference`) over the AeroPulse supersonic airplane insignia.
+  - Live DuckDB Star Schema and Airspace telemetry hydration progress indicator (0% → 100%) with automated race-condition protection and failsafe watchdog timer.
+- **Aeronautical Stratosphere Design System**:
+  - High-resolution atmospheric aerospace backdrop with floating supersonic jet contrails and animated telemetry HUD tags (`FLIGHT LEVEL 410`, `NAS-US RADAR HUD`).
+  - Tactile **Aero Stratosphere Sky Blue** surface containers (`rgba(198, 220, 238, 0.88)`) replacing harsh stark white cards with custom aeronautical borders (`rgba(135, 172, 204, 0.65)`).
+  - Navigation bar equipped with a live **Holographic Radar HUD Scanner** featuring 360-degree sweep beams and active aircraft blips.
+- **Closed-Loop Feedback Mitigation Engine**:
+  - Moves beyond traditional *Open-Loop* delay prediction by actively diagnosing warehouse causation factors and outputting automated mitigation alternatives:
+    - **Time Shift**: Recommending optimal scheduled slots up to 3 hours prior/post with up to 68% delay risk reduction.
+    - **Carrier Switch**: Identifying alternative airlines operating identical routes with superior on-time benchmarks.
+    - **Co-Terminal Bypass**: Rerouting through nearby secondary metro hubs (e.g., LGA/EWR vs. JFK) to circumvent surface taxi friction.
+- **Interactive Geospatial & Analytical Tools**:
+  - **Leaflet.js Geospatial Route Map**: Interactive airspace flight paths connecting top US airport hubs with route-level delay intensity metrics.
+  - **Airport Head-to-Head Comparison Tool**: Direct operational benchmarking between any two US airport hubs across taxi-out congestion, delay rates, and primary causation shares.
+  - **Live ML Delay Predictor**: Real-time inference with SHAP-style feature impact decomposition and multi-class severity meters.
+  - **Interactive SQL OLAP Console & Visual Query Builder**: Run custom analytical SQL queries directly against DuckDB with millisecond latency benchmarks.
 
 ---
 

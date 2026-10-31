@@ -77,20 +77,38 @@ let currentSQLResult = null;
 let allMiningRules = [];
 let leafletRouteMap = null;
 
-document.addEventListener("DOMContentLoaded", () => {
-  setupThemeToggle();
-  setupGlobalFilters();
-  setupTabs();
-  setupHourSlider();
-  setupPredictor();
-  setupConnectingFlight();
-  setupSQLConsole();
-  setupVisualQueryBuilder();
-  setupQueryHistory();
-  setupAirportComparison();
-  setupRouteMap();
-  loadAllData();
-});
+// Bulletproof Application Initializer
+function initApp() {
+  console.log("[AeroPulse AI] Initializing dashboard subsystems...");
+  try { setupThemeToggle(); } catch (e) { console.warn("Theme toggle error:", e); }
+  try { setupGlobalFilters(); } catch (e) { console.warn("Global filters error:", e); }
+  try { setupTabs(); } catch (e) { console.warn("Tabs error:", e); }
+  try { setupHourSlider(); } catch (e) { console.warn("Hour slider error:", e); }
+  try { setupPredictor(); } catch (e) { console.warn("Predictor error:", e); }
+  try { setupConnectingFlight(); } catch (e) { console.warn("Connecting flight error:", e); }
+  try { setupSQLConsole(); } catch (e) { console.warn("SQL console error:", e); }
+  try { setupVisualQueryBuilder(); } catch (e) { console.warn("Visual query builder error:", e); }
+  try { setupQueryHistory(); } catch (e) { console.warn("Query history error:", e); }
+  try { setupAirportComparison(); } catch (e) { console.warn("Airport comparison error:", e); }
+  try { setupRouteMap(); } catch (e) { console.warn("Route map error:", e); }
+
+  loadAllData().catch(err => {
+    console.error("loadAllData failed:", err);
+    dismissLoader();
+  });
+}
+
+// Ensure execution even if DOMContentLoaded already fired before script execution
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}
+
+// Absolute fallback safety: Dismiss loader after 2.8s max under any condition
+setTimeout(() => {
+  dismissLoader();
+}, 2800);
 
 // Tab Switching
 function setupTabs() {
@@ -310,25 +328,84 @@ function setupRouteMap() {
     .catch(e => console.error("Map route load note:", e));
 }
 
+// AeroPulse AI Dynamic Loading Screen Controller
+function updateLoaderProgress(pct, statusText) {
+  const pBar = document.getElementById("loader-progress-bar");
+  const pPct = document.getElementById("loader-progress-pct");
+  const pText = document.getElementById("loader-status-subtext");
+  if (pBar) pBar.style.width = `${pct}%`;
+  if (pPct) pPct.textContent = `${pct}%`;
+  if (pText && statusText) pText.textContent = statusText;
+}
+
+let isLoaderDismissed = false;
+function dismissLoader() {
+  if (isLoaderDismissed) return;
+  isLoaderDismissed = true;
+
+  const loader = document.getElementById("app-root-loader");
+  if (!loader) return;
+  updateLoaderProgress(100, "Airspace Command Center Ready");
+  
+  setTimeout(() => {
+    loader.classList.add("loader-hidden");
+    setTimeout(() => {
+      try { loader.remove(); } catch (_) {}
+    }, 600);
+  }, 350);
+}
+
 // Load All Backend Data
 async function loadAllData() {
+  const startTime = Date.now();
+  updateLoaderProgress(18, "Connecting DuckDB Star Schema DW...");
+
   try {
+    const pOverview = fetch("/api/overview").then(r => {
+      updateLoaderProgress(40, "Hydrating Airspace Telemetry Cubes...");
+      return r.json();
+    });
+    const pEda = fetch("/api/eda").then(r => {
+      updateLoaderProgress(60, "Building Geospatial Route Network...");
+      return r.json();
+    });
+    const pOlap = fetch("/api/olap").then(r => {
+      updateLoaderProgress(78, "Aggregating Dimension Rollups...");
+      return r.json();
+    });
+    const pMining = fetch("/api/mining").then(r => {
+      updateLoaderProgress(88, "Mining Delay Causation & Association Rules...");
+      return r.json();
+    });
+    const pMl = fetch("/api/ml_metrics").then(r => {
+      updateLoaderProgress(96, "Calibrating Gradient Boosting ML Model...");
+      return r.json();
+    });
+
     const [overviewRes, edaRes, olapRes, miningRes, mlRes] = await Promise.all([
-      fetch("/api/overview").then(r => r.json()),
-      fetch("/api/eda").then(r => r.json()),
-      fetch("/api/olap").then(r => r.json()),
-      fetch("/api/mining").then(r => r.json()),
-      fetch("/api/ml_metrics").then(r => r.json())
+      pOverview,
+      pEda,
+      pOlap,
+      pMining,
+      pMl
     ]);
 
-    renderOverview(overviewRes, edaRes);
-    renderEDA(edaRes);
-    renderWarehouse(olapRes);
-    renderMining(miningRes);
-    renderMLMetrics(mlRes);
+    try { renderOverview(overviewRes, edaRes); } catch (e) { console.warn("renderOverview note:", e); }
+    try { renderEDA(edaRes); } catch (e) { console.warn("renderEDA note:", e); }
+    try { renderWarehouse(olapRes); } catch (e) { console.warn("renderWarehouse note:", e); }
+    try { renderMining(miningRes); } catch (e) { console.warn("renderMining note:", e); }
+    try { renderMLMetrics(mlRes); } catch (e) { console.warn("renderMLMetrics note:", e); }
 
+    updateLoaderProgress(100, "Airspace Command Center Ready");
   } catch (err) {
     console.error("Error loading dashboard data:", err);
+    updateLoaderProgress(100, "Offline Mode Ready");
+  } finally {
+    // Keep visible for at least 1 full animation cycle (~1.3s) so user sees the liquid fillUp animation
+    const elapsed = Date.now() - startTime;
+    const minDisplayTime = 1300;
+    const remainingTime = Math.max(0, minDisplayTime - elapsed);
+    setTimeout(dismissLoader, remainingTime);
   }
 }
 
